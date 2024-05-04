@@ -69,6 +69,7 @@ export default function SignUp() {
     email = emailEl.value;
     senha = senhaEl.value;
     confirmarSenha = confirmarSenhaEl.value;
+
     botão = document.getElementById("botão") as HTMLButtonElement;
 
     //Checa se o usuário preencheu todos os campos
@@ -98,12 +99,28 @@ export default function SignUp() {
       return false;
     }
 
-    if (confirmarSenha == senha) {
-      return true;
-    } else {
+    //Valida os caracteres da senha
+    if (!/^[A-Za-z\d@$!%*?&]+$/.test(senha)) {
+      setErro(erros["caracteressenha"]);
+      return false;
+    }
+
+    //Checa se a confirmação da senha é igual à senha
+    if (confirmarSenha != senha) {
       setErro(erros["senhasdiferentes"]);
       return false;
     }
+
+    //Verifica se a senha é forte
+    if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+        senha
+      )
+    ) {
+      setErro(erros["senhafraca"]);
+      return false;
+    }
+    return true;
   }
 
   /**

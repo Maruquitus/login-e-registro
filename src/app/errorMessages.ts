@@ -8,5 +8,9 @@ export const erros: { [key: string]: string } = {
   senhasdiferentes: "Suas senhas não estão iguais!",
   usuarioexiste: "O nome de usuário selecionado já existe!",
   tamanhonome: "O nome de usuário deve ter entre 4 e 20 caracteres.",
-  caracteresnome: "O nome de usuário só pode conter letras, números e underscores.",
+  caracteresnome:
+    "O nome de usuário só pode conter letras, números e underscores.",
+  caracteressenha:
+    "A senha só pode conter letras, números e estes caracteres especiais: @$!%*?&.",
+  senhafraca: "Sua senha deve conter ao menos uma letra maiúscula, uma minúscula e um caractere especial."
 };
