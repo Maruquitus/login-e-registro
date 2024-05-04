@@ -19,7 +19,14 @@ export default function RootLayout({
       <head>
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
       </head>
-      <body className={montserrat.className}>{children}</body>
+      <body className={montserrat.className}>
+        <img
+          src="backdrop.jpg"
+          className="h-screen w-screen bg-gradient absolute pointer-events-none"
+          alt=""
+        />
+        {children}
+      </body>
     </html>
   );
 }

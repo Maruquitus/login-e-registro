@@ -2,7 +2,7 @@ import { MouseEventHandler } from "react";
 
 export function Link(props: {
   onClick?: MouseEventHandler;
-  className: string;
+  className?: string;
   destination: string;
   text: string;
 }) {

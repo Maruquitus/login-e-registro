@@ -15,11 +15,7 @@ export default function Home() {
 
   return (
     <main className="w-full h-screen flex ">
-      <img
-        src="backdrop.jpg"
-        className="h-screen w-screen absolute pointer-events-none"
-        alt=""
-      />
+      <title>Página inicial | Teste técnico</title>
       <div
         onClick={async () => {
           signOut();
@@ -38,7 +34,7 @@ export default function Home() {
 
       <div className="self-center transition-[height] duration-1000 max-w-[25rem] p-8 grid mx-auto my-auto w-11/12 sm:w-auto h-auto bg-white/10 backdrop-blur-md shadow-lg rounded-xl shadow-black/10">
         <h1 className="text-4xl text-white font-bold text-center">
-          Bem-vindo à página inicial!
+          Bem-vindo à sua página inicial!
         </h1>
       </div>
     </main>
