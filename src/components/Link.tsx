@@ -10,7 +10,7 @@ export function Link(props: {
     <a
       onClick={props.onClick}
       className={
-        "text-green-600 hover:scale-105 duration-300 ease-in-out cursor-pointer inline-block " +
+        "text-[#1cad51] hover:scale-105 duration-300 ease-in-out cursor-pointer inline-block " +
         props.className
       }
       href={props.destination}

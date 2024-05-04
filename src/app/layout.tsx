@@ -25,7 +25,7 @@ export default function RootLayout({
           className="h-screen w-screen bg-gradient absolute pointer-events-none"
           alt=""
         />
-        {children}
+        <div className="animate-fade-in-float">{children}</div>
       </body>
     </html>
   );
