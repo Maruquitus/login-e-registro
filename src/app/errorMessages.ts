@@ -12,5 +12,5 @@ export const erros: { [key: string]: string } = {
     "O nome de usuário só pode conter letras, números e underscores.",
   caracteressenha:
     "A senha só pode conter letras, números e estes caracteres especiais: @$!%*?&.",
-  senhafraca: "Sua senha deve conter ao menos uma letra maiúscula, uma minúscula e um caractere especial."
+  senhafraca: "A senha deve ter ao menos 8 caracters, contendo uma letra maiúscula, uma minúscula e um caractere especial."
 };

@@ -3,21 +3,20 @@ import { Button } from "@/components/Button.tsx";
 import { Input } from "@/components/Input.tsx";
 import { auth, db } from "../firebase.ts";
 import { getDocs } from "firebase/firestore";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { erros } from "../errorMessages.ts";
 import { Link } from "@/components/Link.tsx";
 import { faLeaf } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function SignUp() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [confirmarSenha, setConfimarSenha] = useState("");
   const [erro, setErro] = useState("");
   const [visible, setVisible] = useState(false);
-  const [username, setName] = useState("");
-  let name: any[] | SetStateAction<string>,
-    email: string,
-    senha: string,
-    confirmarSenha,
-    botão: HTMLButtonElement;
 
   //Desabilitar reload do form
   useEffect(() => {
@@ -30,19 +29,18 @@ export default function SignUp() {
 
   /**
    * Realiza verificações para determinar se o nome de usuário é válido.
-   * @param username
    * @returns Validade do nome
    */
-  async function checkNameValidity(username: string) {
+  async function checkNameValidity() {
     // Verifica se o nome de usuário contém apenas caracteres alfanuméricos e underscores
     const validCharacters = /^[a-zA-Z0-9_]+$/;
-    if (!validCharacters.test(username)) {
+    if (!validCharacters.test(name)) {
       setErro(erros["caracteresnome"]);
       return false;
     }
 
     // Verifica se o tamanho do nome de usuário está dentro dos limites (entre 4 e 20 caracteres)
-    if (username.length < 4 || username.length > 20) {
+    if (name.length < 4 || name.length > 20) {
       setErro(erros["tamanhonome"]);
       return false;
     }
@@ -53,25 +51,11 @@ export default function SignUp() {
 
   /**
    * Checa a validade das inputs colocadas no formulário: email, senha e confirmarSenha.
-   * @see checkUsernameAndEmailAvailable(name,email) Verifica se o username ou email já existe na base de dados.
+   * @see checkUsernameAndEmailAvailable() Verifica se o username ou email já existe na base de dados.
    * Também checa algumas regras básicas de segurança, como a quantidade de caracteres da senha.
    * @returns Validade das inputs
    */
   async function checkInputValidity() {
-    let nameEl = document.getElementById("name") as HTMLInputElement;
-    name = nameEl ? nameEl.value : "";
-    setName(name);
-    let emailEl = document.getElementById("email") as HTMLInputElement;
-    let senhaEl = document.getElementById("senha") as HTMLInputElement;
-    let confirmarSenhaEl = document.getElementById(
-      "confirmarSenha"
-    ) as HTMLInputElement;
-    email = emailEl.value;
-    senha = senhaEl.value;
-    confirmarSenha = confirmarSenhaEl.value;
-
-    botão = document.getElementById("botão") as HTMLButtonElement;
-
     //Checa se o usuário preencheu todos os campos
     if (
       email.length == 0 ||
@@ -84,15 +68,12 @@ export default function SignUp() {
     }
 
     //Checa se o nome de usuário é válido.
-    let validName = await checkNameValidity(name);
+    let validName = await checkNameValidity();
 
     //Checa se o nome de usuário e email estão disponíveis.
     let usernameOrEmailAvailable;
     if (validName) {
-      usernameOrEmailAvailable = await checkUsernameAndEmailAvailable(
-        name,
-        email
-      );
+      usernameOrEmailAvailable = await checkUsernameAndEmailAvailable();
     }
 
     if (!usernameOrEmailAvailable || !validName) {
@@ -125,20 +106,15 @@ export default function SignUp() {
 
   /**
    * Checa a disponibilidade do nome de usuário e email.
-   * @param username Nome do usuário.
-   * @param email Email do usuário.
    */
-  async function checkUsernameAndEmailAvailable(
-    username: string,
-    email: string
-  ) {
+  async function checkUsernameAndEmailAvailable() {
     //Carregar informações dos usuários
     const usersCol = db.collection("/Users");
     let res = await getDocs(usersCol);
     let passed = true;
     res.forEach((doc) => {
       let data = doc.data();
-      if (data.name == username) {
+      if (data.name == name) {
         setErro(erros["usuarioexiste"]);
         passed = false;
       } else if (data.email == email) {
@@ -151,10 +127,9 @@ export default function SignUp() {
 
   /**
    * Atualiza os dados do registro na BD.
-   * @param name Nome de usuário.
    * @param dados Dados do novo usuário.
    */
-  const finishSignUp = async (name: string, dados: any) => {
+  const finishSignUp = async (dados: any) => {
     //Atualizar dados na bd
     const user = dados.user;
     const usersCol = db.collection("/Users");
@@ -165,7 +140,7 @@ export default function SignUp() {
     });
 
     setErro("");
-    botão.style.cursor = "pointer";
+    setLoading(false);
     alert("Registro feito com sucesso!");
   };
 
@@ -177,20 +152,20 @@ export default function SignUp() {
   const signUp = async () => {
     //Verificação das inputs
     if (await checkInputValidity()) {
-      botão.style.cursor = "wait";
+      setLoading(true);
 
       //Criar usuário no Firebase
       auth
         .createUserWithEmailAndPassword(email, senha)
         .then(async (dados) => {
-          finishSignUp(username, dados);
+          finishSignUp(dados);
           return null;
         })
         .catch((err) => {
           let mensagem = erros[err.code] ? erros[err.code] : "Algo deu errado.";
           console.log(err);
           setErro(mensagem);
-          botão.style.cursor = "pointer";
+          setLoading(false);
         });
     }
   };
@@ -209,14 +184,21 @@ export default function SignUp() {
           Seja bem-vindo! Insira suas informações.
         </h1>
         <form className="space-y-3">
-          <Input id="name" título="Nome de usuário" tipo="text" />
-          <Input id="email" título="Email" tipo="text" />
           <Input
+            setState={setName}
+            id="name"
+            título="Nome de usuário"
+            tipo="text"
+          />
+          <Input setState={setEmail} id="email" título="Email" tipo="text" />
+          <Input
+            setState={setSenha}
             id="senha"
             título="Senha"
             tipo={visible ? "text" : "password"}
           />
           <Input
+            setState={setConfimarSenha}
             id="confirmarSenha"
             título="Confirme sua senha"
             tipo={visible ? "text" : "password"}
@@ -233,7 +215,7 @@ export default function SignUp() {
           </div>
           <div className="flex justify-center">
             <Button
-              id="botão"
+              style={{ cursor: loading ? "wait" : "pointer" }}
               action={async () => {
                 await signUp();
               }}

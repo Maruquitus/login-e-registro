@@ -10,6 +10,9 @@ import { faLeaf } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
   const [user, userLoading] = useAuthState(auth as any);
   const [visible, setVisible] = useState(false);
@@ -33,28 +36,22 @@ export default function Login() {
    */
   const realizarLogin = async () => {
     setErro("");
-    let emailEl = document.getElementById("email") as HTMLInputElement;
-    let email = emailEl ? emailEl.value : "";
-    let senhaEl = document.getElementById("senha") as HTMLInputElement;
-    let senha = senhaEl ? senhaEl.value : "";
-    let botão = document.getElementById("botão");
-
     //Verificação das inputs
-    if (email.length != 0 && senha.length != 0 && botão) {
-      botão.style.cursor = "wait";
+    if (email.length != 0 && senha.length != 0) {
+      setLoading(true);
 
       //Realizar login do usuário no Firebase
       auth
         .signInWithEmailAndPassword(email, senha)
         .then(async () => {
           setErro("");
-          botão.style.cursor = "pointer";
+          setLoading(false);
           document.location.href = "/home";
         })
         .catch((err: { code: string }) => {
           let mensagem = erros[err.code] ? erros[err.code] : "Algo deu errado.";
           setErro(mensagem);
-          botão.style.cursor = "pointer";
+          setLoading(false);
         });
     } else {
       setErro(erros["vazio"]);
@@ -75,8 +72,9 @@ export default function Login() {
           Olá! Entre na sua conta.
         </h1>
         <form className="space-y-3">
-          <Input id="email" título="Email" tipo="text" />
+          <Input setState={setEmail} id="email" título="Email" tipo="text" />
           <Input
+            setState={setSenha}
             id="senha"
             título="Senha"
             tipo={visible ? "text" : "password"}
@@ -92,7 +90,11 @@ export default function Login() {
             </label>
           </div>
           <div className="flex justify-center">
-            <Button id="botão" action={() => realizarLogin()} text="Entrar" />
+            <Button
+              style={{ cursor: loading ? "wait" : "pointer" }}
+              action={() => realizarLogin()}
+              text="Entrar"
+            />
           </div>
         </form>
         <span className="text-gray-50 text-center font-semibold mt-1">
