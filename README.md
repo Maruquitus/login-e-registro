@@ -1,4 +1,4 @@
-# 🍃 Página de login e registro
+# 🍃 Página de Login e Registro
 Aplicação simples com páginas de login e registro, feita para um teste técnico.
 
 ## Tecnologias Utilizadas
