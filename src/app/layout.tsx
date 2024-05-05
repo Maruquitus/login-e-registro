@@ -5,7 +5,7 @@ import "./globals.css";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Teste técnico | Delfos",
+  title: "Teste técnico | Login e Registro",
   description: "Página de login e registro.",
 };
 
