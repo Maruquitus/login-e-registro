@@ -13,7 +13,6 @@ export default function Erro() {
           Tente voltar à tela de login.
         </h2>
         <Button
-          id=""
           text="Fazer login"
           action={() => (window.location.href = "/login")}
         />
