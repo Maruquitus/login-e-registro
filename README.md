@@ -1,4 +1,4 @@
-# 🍃 Teste Delfos
+# 🍃 Página de login e registro
 Aplicação simples com páginas de login e registro, feita para um teste técnico.
 
 ## Tecnologias Utilizadas
