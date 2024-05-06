@@ -17,7 +17,7 @@ export default function Login() {
   const [user, userLoading] = useAuthState(auth as any);
   const [visible, setVisible] = useState(false);
 
-  //Redirecionar usuários para a tela de login ou mensagens dependendo da autenticação
+  //Redirecionar usuários para a tela de home dependendo da autenticação
   if (!userLoading && user) {
     document.location.href = "/home";
   }
